@@ -1,5 +1,8 @@
 module.exports = app => {
     const customers = require("../controllers/customer.controller.js");
+
+    var AuthController = require('../../auth/AuthController');
+    app.use('/', AuthController);
   
     app.post("/customers", customers.create);
   
