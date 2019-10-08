@@ -62,7 +62,7 @@ exports.update = (req, res) => {
       message: "Content can not be empty!"
     });
   }
-
+  // const customer = new Customer( email= req.body.email, name )
   Customer.updateById(
     req.params.customerId,
     new Customer(req.body),
