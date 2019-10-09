@@ -19,8 +19,9 @@ router.post('/register', function(req, res) {
     password : hashedPassword
   },
   function (err, user) {
-    if (err) return res.status(500).send("There was a problem registering the user.")
-    
+    if (err) {
+      return res.status(500).send("There was a problem registering the user.");
+    }
     var token = jwt.sign({ id: user.id }, config.secret, {
       expiresIn: 1000
     });
@@ -31,8 +32,12 @@ router.post('/register', function(req, res) {
 router.get('/me', VerifyToken, function(req, res) {
 
   User.findById(req.userId, { password: 0 }, function (err, user) {
-    if (err) return res.status(500).send("There was a problem finding the user.");
-    if (!user) return res.status(404).send("No user found.");
+    if (err) {
+      return res.status(500).send("There was a problem finding the user.");
+    }
+    if (!user) {
+      return res.status(404).send("No user found.");
+    }
     
     res.status(200).send(user);
   });
@@ -40,11 +45,17 @@ router.get('/me', VerifyToken, function(req, res) {
 
 router.post('/login', function(req, res) {
   User.findByEmail(req.body.email, function (err, user) {
-    if (err) return res.status(500).send('Error on the server.');
-    if (!user) return res.status(404).send('No user found.');
+    if (err) {
+      return res.status(500).send('Error on the server.');
+    }
+    if (!user) {
+      return res.status(404).send('No user found.');
+    }
     
     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-    if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+    if (!passwordIsValid) {
+      return res.status(401).send({ auth: false, token: null });
+    }
     
     var token = jwt.sign({ id: user.id }, config.secret, {
       expiresIn: 1000

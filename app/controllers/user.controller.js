@@ -39,7 +39,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findByID = (req, res) => {
-  User.findById(req.params.userId, (err, data) => {
+  User.findById(req.params.userId, {}, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -81,25 +81,21 @@ exports.update = (req, res) => {
     });
   }
 
-  User.updateById(
-    req.params.userId,
-    new User(req.body),
-    (err, data) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found User with id ${req.params.userId}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error updating User with id " + req.params.userId
-          });
-        }
+  User.updateById(req.params.userId, new User(req.body), (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found User with id ${req.params.userId}.`
+        });
       } else {
-        res.send(data);
+        res.status(500).send({
+          message: "Error updating User with id " + req.params.userId
+        });
       }
+    } else {
+      res.send(data);
     }
-  );
+  });
 };
 
 

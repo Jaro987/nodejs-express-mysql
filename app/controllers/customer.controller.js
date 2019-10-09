@@ -62,26 +62,21 @@ exports.update = (req, res) => {
       message: "Content can not be empty!"
     });
   }
-  // const customer = new Customer( email= req.body.email, name )
-  Customer.updateById(
-    req.params.customerId,
-    new Customer(req.body),
-    (err, data) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found Customer with id ${req.params.customerId}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error updating Customer with id " + req.params.customerId
-          });
-        }
+  Customer.updateById( req.params.customerId, new Customer(req.body), (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Customer with id ${req.params.customerId}.`
+        });
       } else {
-        res.send(data);
+        res.status(500).send({
+          message: "Error updating Customer with id " + req.params.customerId
+        });
       }
+    } else {
+      res.send(data);
     }
-  );
+  });
 };
 
 
